@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.pkl-lang.spring</groupId>
+    <artifactId>pkl-spring-boot-integration</artifactId>
+    <version>0.1.0</version>
+  </parent>
+
+  <artifactId>pkl-maven-plugin</artifactId>
+  <packaging>maven-plugin</packaging>
+  <name>Pkl Maven Plugin (prototype)</name>
+  <description>
+    Generates Java config classes from Pkl schemas, wrapping pkl-codegen-java.
+    Bundles the Pkl toolchain and runs code generation in an isolated JVM, so users
+    do not have to hand-wire exec-maven-plugin, build-helper, or pin the Pkl version.
+  </description>
+
+  <properties>
+    <maven.version>3.9.9</maven.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>${maven.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-core</artifactId>
+      <version>${maven.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <version>3.13.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!--
+      The Pkl toolchain, bundled with the plugin. Because a Maven plugin runs in its own
+      isolated class realm, this does NOT clash with the Pkl runtime on the project's
+      classpath. The Mojo locates this jar and forks a JVM to run code generation.
+    -->
+    <dependency>
+      <groupId>org.pkl-lang</groupId>
+      <artifactId>pkl-tools</artifactId>
+      <version>${pkl.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <version>3.13.1</version>
+        <configuration>
+          <goalPrefix>pkl</goalPrefix>
+        </configuration>
+        <executions>
+          <execution>
+            <id>default-descriptor</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>help-goal</id>
+            <goals>
+              <goal>helpmojo</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.pkl-lang.spring</groupId>
+    <artifactId>pkl-spring-boot-integration</artifactId>
+    <version>0.1.0</version>
+  </parent>
+
+  <!-- The objective of this starter bring all the autoconfigure features of pkl-spring into a starter,
+       if the configurations grow, this starter can be used to aggregate different modules. Right now,
+       this module only servers for discoverability in the spring boot community -->
+  <artifactId>pkl-spring-boot-starter</artifactId>
+  <packaging>jar</packaging>
+  <name>Pkl Spring Boot Starter</name>
+  <description>
+    Starter for configuring Spring Boot applications with Pkl. Aggregates pkl-spring
+    (which self-registers a PropertySourceLoader and auto-configuration) so applications
+    depend on a single artifact instead of hand-wiring the integration.
+  </description>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+
+    <!-- pkl-spring would benefit from being renamed as pkl-spring-boot-autoconfigure, to follow Spring Boot taxonomy -->
+    <!-- Registers org.pkl.spring.boot.PklPropertySourceLoader + PklAutoConfiguration. -->
+    <dependency>
+      <groupId>org.pkl-lang</groupId>
+      <artifactId>pkl-spring</artifactId>
+      <version>${pkl-spring.version}</version>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- Manage the Spring Boot version so this starter can be used without a Boot parent. -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <!-- This version is already EOL -->
+        <!-- https://spring.io/projects/spring-boot#support -->
+        <version>3.4.1</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>
